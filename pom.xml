@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>collabode</groupId>
+  <artifactId>collabode.tests</artifactId>
+  <version>1.0.0</version>
+  <name>Collabode Tests</name>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>selenium-java</artifactId>
+      <version>[2.20,3)</version>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+
+    <defaultGoal>eclipse:eclipse</defaultGoal>
+    <directory>bin</directory>
+    <outputDirectory>${project.build.directory}</outputDirectory>
+
+    <plugins>
+
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.3.2</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.7</version>
+
+        <executions>
+          <execution>
+            <phase>generate-sources</phase>
+            <goals><goal>add-source</goal></goals>
+            <configuration>
+              <sources>
+                <source>browser</source>
+                <source>integration</source>
+                <source>unit</source>
+                <source>test</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>2.9</version>
+
+        <configuration>
+          <projectNameTemplate>collabode-tests</projectNameTemplate>
+          <pde>true</pde>
+          <sourceIncludes>
+            <sourceInclude>**/*.js</sourceInclude>
+          </sourceIncludes>
+          <downloadJavadocs>true</downloadJavadocs>
+          <downloadSources>true</downloadSources>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>com.google.code.maven-replacer-plugin</groupId>
+        <artifactId>maven-replacer-plugin</artifactId>
+        <version>1.4.0</version>
+        <executions>
+          <execution>
+            <phase>prepare-package</phase>
+            <goals><goal>replace</goal></goals>
+          </execution>
+        </executions>
+        <configuration>
+          <regexFlags>
+            <regexFlag>MULTILINE</regexFlag>
+          </regexFlags>
+          <includes>
+            <include>.project</include>
+            <include>.classpath</include>
+            <include>META-INF/MANIFEST.MF</include>
+          </includes>
+          <replacements>
+            <replacement>
+              <token>(&lt;name&gt;)([^/\n]+\.jar)</token>
+              <value>$1lib/$2</value>
+            </replacement>
+            <replacement>
+              <token>path="([^/\n]+\.jar)"</token>
+              <value>path="lib/$1"</value>
+            </replacement>
+            <replacement>
+              <token>^(\s+)([^/\n]+\.jar)</token>
+              <value>$1lib/$2</value>
+            </replacement>
+            <replacement>
+              <token>Bundle-SymbolicName: collabode-tests</token>
+              <value>Bundle-SymbolicName: collabode.tests</value>
+            </replacement>
+          </replacements>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  </build>
+</project>
+
