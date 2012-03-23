@@ -33,6 +33,23 @@ public class IntegrationTest extends BrowserTest {
         }
     }
     
+    @Test public void testUserMutualDepMultiFile() throws Throwable {
+        barrier = new QuietCyclicBarrier(2);
+        
+        List<Future<Void>> futures = exec.invokeAll(Arrays.asList(new VoidCall[] {
+                new UserMutualDep("Hello", 2, "foo", "Greeting.bar", 1),
+                new UserMutualDep("Greeting", 2, "bar", "Hello.foo", 1)
+        }));
+        
+        for (Future<Void> future : futures) {
+            try {
+                future.get();
+            } catch (ExecutionException ee) {
+                throw ee.getCause();
+            }
+        }
+    }
+    
     class UserMutualDep implements VoidCall {
         final String clazz, declare, call;
         final int offset, edits;
