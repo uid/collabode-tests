@@ -1,0 +1,4 @@
+seleniumIP = 172.16.242.129
+# seleniumPorts = 4444, 4445
+
+listenIP = 192.168.45.1
