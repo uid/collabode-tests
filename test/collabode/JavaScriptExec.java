@@ -17,6 +17,9 @@ import scala.*;
 
 /**
  * JavaScript executable task.
+ * 
+ * To customize behavior, subclass and override one or more of
+ * {@link #initialize}, {@link #complete}, and {@link #error}.
  */
 public abstract class JavaScriptExec implements VoidCall {
     
@@ -46,6 +49,9 @@ public abstract class JavaScriptExec implements VoidCall {
     
     /**
      * Constructs an executable for the given script.
+     * 
+     * @param script location of script
+     * @param name optional name(s) to identify this executable
      */
     JavaScriptExec(URL script, String... name) throws IOException {
         String path = script.getPath();

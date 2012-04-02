@@ -3,6 +3,9 @@ package collabode;
 import java.util.concurrent.BrokenBarrierException;
 import java.util.concurrent.CyclicBarrier;
 
+/**
+ * {@link CyclicBarrier} where {@link #await} throws only unchecked exceptions.
+ */
 public class QuietCyclicBarrier extends CyclicBarrier {
     
     public QuietCyclicBarrier(int parties) {
