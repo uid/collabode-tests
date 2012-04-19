@@ -157,6 +157,7 @@ public class MonkeysTest extends BrowserTest {
                 public void run() {
                     driver.get(fixture() + "/src/" + target);
                     run.run();
+                    driver.waitForSyncing();
                     driver.waitForSync();
                 }
             }));
