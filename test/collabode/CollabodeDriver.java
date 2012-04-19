@@ -86,6 +86,24 @@ public class CollabodeDriver implements WebDriver, JavascriptExecutor {
     }
     
     /**
+     * Wait for the pad editor to report a syncing state, or time out successfully.
+     * 
+     * @return this
+     */
+    public CollabodeDriver waitForSyncing() {
+        switchToPage();
+        final WebElement syncing = driver.findElement(By.id("syncstatussyncing"));
+        try {
+            new WebDriverWait(driver, 2).until(new Predicate<WebDriver>() {
+                public boolean apply(WebDriver input) {
+                    return syncing.isDisplayed();
+                }
+            });
+        } catch (TimeoutException te) { }
+        return this;
+    }
+    
+    /**
      * Returns the first pad editor line containing {@code target}.
      */
     public WebElement findEditorLine(String target) {
