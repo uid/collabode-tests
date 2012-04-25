@@ -9,7 +9,6 @@ import java.util.*;
 import org.junit.Test;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import collabode.BrowserTest;
 import collabode.CollabodeDriver;
@@ -62,7 +61,7 @@ public class CodeCompleteTest extends BrowserTest {
         List<String> expected = new ArrayList<String>(Arrays.asList(completions));
         assertFalse("Nothing to test for " + Arrays.toString(inputs), expected.isEmpty());
         
-        WebElement list = new WebDriverWait(driver, 1).until(new ExpectedCondition<WebElement>() {
+        WebElement list = driver.wait.until(new ExpectedCondition<WebElement>() {
             public WebElement apply(WebDriver driver) {
                 return driver.findElement(By.className("codecomplete"));
             }

@@ -19,10 +19,12 @@ public class CollabodeDriver implements WebDriver, JavascriptExecutor {
      * Underlying driver.
      */
     public final WebDriver driver;
+    public final WebDriverWait wait;
     
     public CollabodeDriver(String baseUrl, WebDriver driver) {
         this.baseUrl = baseUrl;
         this.driver = driver;
+        this.wait = new WebDriverWait(driver, 20);
     }
     
     /**

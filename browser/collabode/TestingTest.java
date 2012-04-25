@@ -7,7 +7,6 @@ import java.util.*;
 
 import org.junit.Test;
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Function;
 
@@ -23,7 +22,7 @@ public class TestingTest extends BrowserTest {
         
         final WebElement box = driver.findElement(TEST_CONTAINER);
         
-        new WebDriverWait(driver, 10).until(new Function<WebDriver, WebElement>() {
+        driver.wait.until(new Function<WebDriver, WebElement>() {
             public WebElement apply(WebDriver driver) {
                 return box.findElement(By.cssSelector(".test.error"));
             }
@@ -39,7 +38,7 @@ public class TestingTest extends BrowserTest {
                                               "}", ENTER);
         driver.switchToPage();
         
-        new WebDriverWait(driver, 10).until(new Function<WebDriver, WebElement>() {
+        driver.wait.until(new Function<WebDriver, WebElement>() {
             public WebElement apply(WebDriver driver) {
                 return box.findElement(By.cssSelector(".test.failure"));
             }
@@ -52,7 +51,7 @@ public class TestingTest extends BrowserTest {
         driver.switchToEditorInner().sendKeys(BACK_SPACE, BACK_SPACE, "1;");
         driver.switchToPage();
         
-        new WebDriverWait(driver, 10).until(new Function<WebDriver, WebElement>() {
+        driver.wait.until(new Function<WebDriver, WebElement>() {
             public WebElement apply(WebDriver driver) {
                 return box.findElement(By.cssSelector(".test.ok"));
             }

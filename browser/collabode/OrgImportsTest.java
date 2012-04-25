@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.junit.Test;
 import org.openqa.selenium.*;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.google.common.base.Function;
 
@@ -32,7 +31,7 @@ public class OrgImportsTest extends BrowserTest {
         WebElement button = driver.findElement(ORG_IMPORTS);
         button.click();
         
-        WebElement box = new WebDriverWait(driver, 5).until(new Function<WebDriver, WebElement>() {
+        WebElement box = driver.wait.until(new Function<WebDriver, WebElement>() {
             public WebElement apply(WebDriver driver) {
                 return driver.findElement(RESOLVE_DIALOG);
             }
