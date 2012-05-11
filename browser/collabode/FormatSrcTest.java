@@ -14,13 +14,16 @@ public class FormatSrcTest extends BrowserTest {
     static final By FORMAT = By.cssSelector("#format.docbarbutton");
     
     @Test public void testFormat() throws IOException {
-        CollabodeDriver driver = connect();
+        final CollabodeDriver driver = connect();
         driver.get(fixture() + "/src/Hello.java");
         driver.waitForSync();
         WebElement button = driver.findElement(FORMAT);
         button.click();
-        driver.waitForSyncing();
-        driver.waitForSync();
-        assertEquals(expected("Hello.java").trim(), driver.switchToEditorInner().getText());
+        
+        driver.wait.until(successful(new VoidCall.Boxed() {
+            void voidCall() throws Exception {
+                assertEquals(expected("Hello.java").trim(), driver.switchToEditorInner().getText());
+            }
+        }));
     }
 }

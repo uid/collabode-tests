@@ -24,6 +24,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import com.google.common.base.Predicate;
+
 /**
  * Browser automation test using Selenium.
  */
@@ -177,6 +179,25 @@ public class BrowserTest {
     }
     
     /**
+     * Returns a predicate that returns true iff {@code call} completes normally.
+     * Wraps {@link AssertionError}s so {@link WebDriverWait} can ignore them.
+     */
+    protected static Predicate<WebDriver> successful(final VoidCall call) {
+        return new Predicate<WebDriver>() {
+            public boolean apply(WebDriver input) {
+                try {
+                    call.call();
+                } catch (AssertionError ae) {
+                    throw new AssertionException(ae);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                return true;
+            }
+        };
+    }
+    
+    /**
      * Specifies the location of test fixtures.
      */
     @Retention(RetentionPolicy.RUNTIME)
@@ -196,5 +217,14 @@ class StatusHandler implements ResponseHandler<Integer> {
     public Integer handleResponse(HttpResponse response) throws ClientProtocolException, IOException {
         EntityUtils.consume(response.getEntity());
         return response.getStatusLine().getStatusCode();
+    }
+}
+
+class AssertionException extends RuntimeException {
+    
+    private static final long serialVersionUID = 1L;
+    
+    AssertionException(AssertionError cause) {
+        super(cause);
     }
 }

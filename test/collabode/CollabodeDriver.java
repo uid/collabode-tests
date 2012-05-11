@@ -25,6 +25,7 @@ public class CollabodeDriver implements WebDriver, JavascriptExecutor {
         this.baseUrl = baseUrl;
         this.driver = driver;
         this.wait = new WebDriverWait(driver, 20);
+        wait.ignoring(AssertionException.class);
     }
     
     /**

@@ -14,18 +14,21 @@ public class OrgImportsTest extends BrowserTest {
     static final By RESOLVE_DIALOG = By.id("orgimports-container");
     
     @Test public void testUnambiguous() throws IOException, InterruptedException {
-        CollabodeDriver driver = connect();
+        final CollabodeDriver driver = connect();
         driver.get(fixture() + "/src/Unambiguous.java");
         driver.waitForSync();
         WebElement button = driver.findElement(ORG_IMPORTS);
         button.click();
-        driver.waitForSyncing();
-        driver.waitForSync();
-        assertEqualsModWhitespace(expected("Unambiguous.java"), driver.switchToEditorInner().getText());
+        
+        driver.wait.until(successful(new VoidCall.Boxed() {
+            void voidCall() throws IOException {
+                assertEqualsModWhitespace(expected("Unambiguous.java"), driver.switchToEditorInner().getText());
+            }
+        }));
     }
     
     @Test public void testAmbiguous() throws IOException, InterruptedException {
-        CollabodeDriver driver = connect();
+        final CollabodeDriver driver = connect();
         driver.get(fixture() + "/src/Ambiguous.java");
         driver.waitForSync();
         WebElement button = driver.findElement(ORG_IMPORTS);
@@ -42,8 +45,10 @@ public class OrgImportsTest extends BrowserTest {
         box.findElement(By.xpath("//li[.='java.util.List']")).click();
         box.findElement(By.xpath("//button[.='Finish']")).click();
         
-        driver.waitForSyncing();
-        driver.waitForSync();
-        assertEqualsModWhitespace(expected("Ambiguous.java"), driver.switchToEditorInner().getText());
+        driver.wait.until(successful(new VoidCall.Boxed() {
+            void voidCall() throws IOException {
+                assertEqualsModWhitespace(expected("Ambiguous.java"), driver.switchToEditorInner().getText());
+            }
+        }));
     }
 }
