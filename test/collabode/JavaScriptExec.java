@@ -12,6 +12,7 @@ import net.appjet.oui.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.mortbay.util.IO;
+import org.mozilla.javascript.*;
 
 import scala.*;
 
@@ -21,7 +22,7 @@ import scala.*;
  * To customize behavior, subclass and override one or more of
  * {@link #initialize}, {@link #complete}, and {@link #error}.
  */
-public abstract class JavaScriptExec implements VoidCall {
+public class JavaScriptExec implements VoidCall {
     
     private static final Function0<Object> DONE = F.n0pass();
     
@@ -33,19 +34,6 @@ public abstract class JavaScriptExec implements VoidCall {
     
     private final Executable executable;
     private final Map<String, String> headers = new HashMap<String, String>();
-    private final Function2<Integer, String, Object> error = new F.n2<Integer, String, Object>() {
-        public Object apply(Integer sc, String msg) {
-            error(sc, msg);
-            return null;
-        }
-    };
-    private final Function0<Object> complete = new F.n0<Object>() {
-        public Object apply() {
-            done.countDown();
-            complete();
-            return null;
-        }
-    };
     
     /**
      * Constructs an executable for the given script.
@@ -73,7 +61,11 @@ public abstract class JavaScriptExec implements VoidCall {
      * Override to handle errors.
      * Default implementation throws an error.
      */
-    void error(Integer sc, String msg) {
+    void error(Integer sc, String msg, ExecutionContext ec) {
+        Object error = ec.attributes().get("error").get();
+        if (error instanceof Throwable) {
+            throw new AssertionError((Throwable)error);
+        }
         throw new AssertionError(msg);
     }
     
@@ -87,13 +79,41 @@ public abstract class JavaScriptExec implements VoidCall {
     public Void call() throws Exception {
         RequestWrapper req = new RequestWrapper(HttpServletRequestFactory.createRequest("/", headers, "GET", null));
         ResponseWrapper res = new ResponseWrapper(HttpServletRequestFactory.createResponse());
-        ExecutionContext ec = new ExecutionContext(req, res, ScopeReuseManager.getRunner());
+        final ExecutionContext ec = new ExecutionContext(req, res, ScopeReuseManager.getRunner());
+        ScriptableObject.putProperty(ec.runner().globalScope(), "testutils", new TestUtils(ec));
         
         initialize(ec);
+        
+        Function2<Integer, String, Object> error = new F.n2<Integer, String, Object>() {
+            public Object apply(Integer sc, String msg) {
+                error(sc, msg, ec);
+                return null;
+            }
+        };
+        Function0<Object> complete = new F.n0<Object>() {
+            public Object apply() {
+                done.countDown();
+                complete();
+                return null;
+            }
+        };
         
         execution.execute(ec, error, DONE, complete, new Some<Executable>(executable));
         
         return null;
     }
-
+    
+    public class TestUtils {
+        
+        /**
+         * Import an already-loaded module to a destination.
+         * @see importPath(modulePath, dst) in modules/preamble.js
+         */
+        public final NativeFunction lateimport;
+        
+        public TestUtils(ExecutionContext ec) {
+            NativeFunction importFn = (NativeFunction)ec.runner().globalScope().get("import", null);
+            lateimport = (NativeFunction)importFn.getParentScope().get("importPath", null);
+        }
+    }
 }
