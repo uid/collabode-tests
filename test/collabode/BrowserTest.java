@@ -170,10 +170,11 @@ public class BrowserTest {
      * Changes to leading, trailing, and internal whitespace are ignored.
      */
     protected static void assertEqualsModWhitespace(String expected, String actual) {
-        expected = " " + expected + " ";
-        actual = " " + actual + " ";
-        String white = "\\s+";
-        assertEquals(expected.replaceAll(white, " "), actual.replaceAll(white, " "));
+        assertEquals(regularWhitespace(expected), regularWhitespace(actual));
+    }
+    
+    protected static String regularWhitespace(String input) {
+        return (" " + input + " ").replaceAll("\\s+", " ");
     }
     
     /**
