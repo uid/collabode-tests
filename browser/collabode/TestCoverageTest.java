@@ -118,7 +118,7 @@ public class TestCoverageTest extends BrowserTest {
     }
     
     private void assertCoverage(String test, String... files) {
-        assertEqualsModWhitespace(test, driver.findElement(TEST).getText());
+        assertEqualsModWhitespace(test, driver.findElement(TEST).findElement(FILE).getText());
         
         SortedSet<String> expected = new TreeSet<String>();
         for (String file : files) {
