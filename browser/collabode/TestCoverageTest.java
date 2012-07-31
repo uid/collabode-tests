@@ -14,6 +14,7 @@ import org.openqa.selenium.*;
 import com.google.common.base.Function;
 
 @BrowserTest.Fixtures("test-coverage")
+@BrowserTest.TestDriven
 public class TestCoverageTest extends BrowserTest {
     
     private static final Pattern DECLARE = Pattern.compile(".*public.*\\(.*\\) \\{$", Pattern.MULTILINE);
