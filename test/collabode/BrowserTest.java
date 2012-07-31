@@ -136,8 +136,10 @@ public class BrowserTest {
         String fixtureDir = fixtures.value();
         fixture = "junit-" + fixtureDir + "-" + (int)(System.currentTimeMillis() / 1000);
         
+        boolean testDriven = getClass().isAnnotationPresent(TestDriven.class);
         adminPost("",
-                  new BasicNameValuePair("projectname", fixture));
+                  new BasicNameValuePair("projectname", fixture),
+                  new BasicNameValuePair("projecttype", testDriven ? "javatdproject" : "javaproject"));
         adminPost(fixture,
                   new BasicNameValuePair("acl", "1"),
                   new BasicNameValuePair("acl_userid", "anyone"),
@@ -183,6 +185,10 @@ public class BrowserTest {
     @Retention(RetentionPolicy.RUNTIME)
     public static @interface Fixtures {
         String value();
+    }
+    
+    @Retention(RetentionPolicy.RUNTIME)
+    public static @interface TestDriven {
     }
 }
 

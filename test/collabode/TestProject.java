@@ -40,7 +40,7 @@ public class TestProject extends ExternalResource {
     }
     
     @Override protected void before() throws Throwable {
-        project = Workspace.createJavaProject("junit-" + name + "-" + COUNTER.getAndIncrement());
+        project = Workspace.createJavaProject("junit-" + name + "-" + COUNTER.getAndIncrement(), false);
     }
     
     @Override protected void after() {
